@@ -1,5 +1,3 @@
-// /api/voice.js
-
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Only POST allowed" });
@@ -20,7 +18,7 @@ export default async function handler(req, res) {
           "xi-api-key": process.env.ELEVENLABS_API_KEY
         },
         body: JSON.stringify({
-          text: text,
+          text,
           model_id: "eleven_multilingual_v2",
           voice_settings: {
             stability: 0.5,
@@ -31,11 +29,10 @@ export default async function handler(req, res) {
     );
 
     const audio = await response.arrayBuffer();
-
     res.setHeader("Content-Type", "audio/mpeg");
-    res.status(200).send(Buffer.from(audio));
-
+    res.send(Buffer.from(audio));
   } catch (err) {
-    res.status(500).json({ error: "Voice generation failed" });
+    res.status(500).json({ error: "Voice failed" });
   }
 }
+
